@@ -1,17 +1,14 @@
 import { StyleSheet, SafeAreaView, ImageBackground, Alert } from "react-native";
 import Button from "../assets/button";
 
-const Home = (props) => {
+const Home = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
         source={require("../assets/plant.jpg")}
         style={styles.backgoundImage}
       >
-        <Button
-          btnLabel="lets start"
-          Press={() => props.navigation.navigate("Login")}
-        />
+        <Button btnLabel="lets start" Press={() => navigation.push("Login")} />
       </ImageBackground>
     </SafeAreaView>
   );
