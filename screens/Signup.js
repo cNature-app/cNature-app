@@ -15,7 +15,7 @@ import * as Yup from "yup";
 import Validator from "email-validator";
 import { firebase } from "../firebase";
 
-const Signup = (props) => {
+const Signup = ({ navigation }) => {
   const LoginFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
     password: Yup.string()
@@ -215,9 +215,7 @@ const Signup = (props) => {
               </Pressable>
               <View style={styles.signupcont}>
                 <Text>Don't have an account?</Text>
-                <TouchableOpacity
-                  onPress={() => props.navigation.navigate("login")}
-                >
+                <TouchableOpacity onPress={() => navigation.push("Login")}>
                   <Text
                     style={{
                       color: "lightgreen",
