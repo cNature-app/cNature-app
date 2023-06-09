@@ -13,7 +13,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
-import { firebase } from "../firebase";
+import { db, firebase } from "../firebase";
 
 const Signup = (props) => {
   const LoginFormSchema = Yup.object().shape({
@@ -22,10 +22,17 @@ const Signup = (props) => {
       .required()
       .min(6, "your password has to have atleast 8 characters"),
   });
-  const onSignup = async (email, password) => {
+  const onSignup = async (email, password, username) => {
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const authUser = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
       console.log("created user", email, password);
+      db.collection("users").doc(authUser.user.email).set({
+        owner_uid: authUser.user.uid,
+        username: username,
+        email: authUser.user.email,
+      });
     } catch (error) {
       Alert.alert("invalid username or password", error.message);
     }
@@ -41,9 +48,14 @@ const Signup = (props) => {
       }}
     >
       <Formik
-        initialValues={{ email: "", password: "", confirmpassword: "" }}
+        initialValues={{
+          username: "",
+          email: "",
+          password: "",
+          confirmpassword: "",
+        }}
         onSubmit={(values) => {
-          onSignup(values.email, values.password);
+          onSignup(values.email, values.password, values.username);
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}
